@@ -7,7 +7,7 @@ setTimeout(() => {
 
 // when restarting the app, not just refreshing
 if (!pageIsReloaded()) {
-    document.querySelector("#enter").style.display = "flex";
+    document.querySelector("#welcome").style.display = "flex";
     setTimeout(() => {
         window.location.reload();
     }, 2000);
