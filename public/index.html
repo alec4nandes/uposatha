@@ -43,14 +43,16 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="style.css">
-
         <!-- JavaScript -->
         <script src="index.js" defer></script>
+        <!-- add to every page: -->
+        <script src="/scripts/reloader.js"></script>
     </head>
 
     <body>
         <h1>Uposatha Reminders</h1>
-        <button id="permission-btn" onclick="main()">GET NOTIFICATIONS</button>
+        <button id="permission-btn" onclick="main()" style="display: none">GET NOTIFICATIONS</button>
         <p>To-Do: Hide button if notifications are enabled.</p>
+        <button onclick="window.location.reload()">refresh page</button>
     </body>
 </html>

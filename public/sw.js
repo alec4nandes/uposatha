@@ -1,11 +1,14 @@
-const cacheName = "cache6"; // Change value to force update
+const cacheName = "cache22"; // Change value to force update
 
 // PWA
 
 self.addEventListener("install", (event) => {
+    cacheFiles(event);
     // Kick out the old service worker
     self.skipWaiting();
+});
 
+function cacheFiles(event) {
     event.waitUntil(
         caches.open(cacheName).then((cache) => {
             return cache.addAll([
@@ -49,7 +52,7 @@ self.addEventListener("install", (event) => {
             ]);
         })
     );
-});
+}
 
 // Offline-first, cache-first strategy
 // Kick off two asynchronous requests, one to the cache and one to the network
@@ -72,8 +75,6 @@ self.addEventListener("fetch", (event) => {
 });
 
 // PUSH NOTIFICATIONS
-
-const IS_DEVELOPMENT = false;
 
 self.addEventListener("push", function (event) {
     if (event.data) {
@@ -98,20 +99,21 @@ function showLocalNotification(title, body, swRegistration) {
 
 // BOTH PWA & PUSH NOTIFICATIONS
 
-self.addEventListener("activate", (event) => {
-    event.waitUntil(async () => {
-        // Delete any non-current cache
-        const cacheKeys = await caches.keys();
-        await Promise.all(
-            cacheKeys.map((key) => {
-                if (![cacheName].includes(key)) {
-                    return caches.delete(key);
-                }
-            })
-        );
-        await handleActivatePushManager();
-    });
+self.addEventListener("activate", async (event) => {
+    await cleanCache();
+    await handleActivatePushManager();
 });
+
+async function cleanCache() {
+    const cacheKeys = await caches.keys();
+    return await Promise.all(
+        cacheKeys.map((key) => {
+            if (![cacheName].includes(key)) {
+                return caches.delete(key);
+            }
+        })
+    );
+}
 
 async function handleActivatePushManager() {
     // This will be called only once when the service worker is activated.
@@ -128,6 +130,8 @@ async function handleActivatePushManager() {
         console.error("[ERROR]", err);
     }
 }
+
+const IS_DEVELOPMENT = false;
 
 async function contactServer(subscription) {
     const SERVER_URL = IS_DEVELOPMENT

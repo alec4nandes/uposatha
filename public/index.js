@@ -1,3 +1,12 @@
+getPermission();
+
+function getPermission() {
+    const granted = window.Notification.permission === "granted";
+    document.querySelector("#permission-btn").style.display = granted
+        ? "none"
+        : "inline-block";
+}
+
 async function main() {
     check();
     const permission = await requestNotificationPermission();
@@ -22,6 +31,7 @@ async function requestNotificationPermission() {
     if (permission !== "granted") {
         throw new Error("Permission not granted for window.Notification");
     }
+    getPermission();
     return permission;
 }
 

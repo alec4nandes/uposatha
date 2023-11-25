@@ -21,7 +21,7 @@ const dummyDb = { subscription: null }; // dummy in memory store
 api.post("/", async (req, res) => {
     const subscription = req.body;
     await saveToDatabase(subscription);
-    res.json({ message: "notifications enabled" });
+    res.json({ message: "push manager activated" });
 });
 
 async function saveToDatabase(subscription) {
