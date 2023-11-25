@@ -1,4 +1,6 @@
-const cacheName = "cache1"; // Change value to force update
+const cacheName = "cache6"; // Change value to force update
+
+// PWA
 
 self.addEventListener("install", (event) => {
     // Kick out the old service worker
@@ -32,8 +34,8 @@ self.addEventListener("install", (event) => {
                 "favicon-16x16.png", // Favicon, default
                 "favicon-32x32.png", // Favicon, Safari on Mac OS
                 "index.html", // Main HTML file
+                "index.js", // Main JS file
                 "logo.png", // Logo
-                "main.js", // Main Javascript file
                 "manifest.json", // Manifest file
                 "maskable_icon.png", // Favicon, maskable https://web.dev/maskable-icon
                 "mstile-70x70.png", // Favicon, Windows 8 / IE11
@@ -48,21 +50,6 @@ self.addEventListener("install", (event) => {
         })
     );
 });
-
-// self.addEventListener("activate", (event) => {
-//     // Delete any non-current cache
-//     event.waitUntil(
-//         caches.keys().then((keys) => {
-//             Promise.all(
-//                 keys.map((key) => {
-//                     if (![cacheName].includes(key)) {
-//                         return caches.delete(key);
-//                     }
-//                 })
-//             );
-//         })
-//     );
-// });
 
 // Offline-first, cache-first strategy
 // Kick off two asynchronous requests, one to the cache and one to the network
@@ -83,3 +70,75 @@ self.addEventListener("fetch", (event) => {
         })
     );
 });
+
+// PUSH NOTIFICATIONS
+
+const IS_DEVELOPMENT = false;
+
+self.addEventListener("push", function (event) {
+    if (event.data) {
+        console.log("Push event:", event.data.text());
+        showLocalNotification(
+            "Today is Uposatha",
+            event.data.text(),
+            self.registration
+        );
+    } else {
+        console.warn("Push event, but no data.");
+    }
+});
+
+function showLocalNotification(title, body, swRegistration) {
+    const options = {
+        // here you can add more properties like icon, image, vibrate, etc.
+        body,
+    };
+    swRegistration.showNotification(title, options);
+}
+
+// BOTH PWA & PUSH NOTIFICATIONS
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(async () => {
+        // Delete any non-current cache
+        const cacheKeys = await caches.keys();
+        await Promise.all(
+            cacheKeys.map((key) => {
+                if (![cacheName].includes(key)) {
+                    return caches.delete(key);
+                }
+            })
+        );
+        await handleActivatePushManager();
+    });
+});
+
+async function handleActivatePushManager() {
+    // This will be called only once when the service worker is activated.
+    try {
+        const applicationServerKey =
+                "BL9RzIuTXf5t8XSB7On9IfCNucATGUhS3kqTVp3W6HBajUEGdclXaoo2Nhlqx1xGXoS-rgHATdsR_jOCf4fdzHE",
+            options = { applicationServerKey, userVisibleOnly: true },
+            subscription = await self.registration.pushManager.subscribe(
+                options
+            ),
+            response = await contactServer(subscription);
+        console.log(response);
+    } catch (err) {
+        console.error("[ERROR]", err);
+    }
+}
+
+async function contactServer(subscription) {
+    const SERVER_URL = IS_DEVELOPMENT
+            ? "http://localhost:5001/uposatha-f7d3e/us-central1/api"
+            : "https://us-central1-uposatha-f7d3e.cloudfunctions.net/api",
+        response = await fetch(SERVER_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(subscription),
+        });
+    return response.json();
+}

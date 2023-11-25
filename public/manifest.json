@@ -1,6 +1,6 @@
 {
-    "name": "Simple PWA",
-    "short_name": "Simple PWA",
+    "name": "Uposatha Reminders",
+    "short_name": "Uposatha Reminders",
     "display": "standalone",
     "start_url": "./?utm_source=pwa_install",
     "scope": ".",
