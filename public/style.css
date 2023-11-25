@@ -1,3 +1,9 @@
+body,
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background-color: black;
     color: white;
@@ -6,5 +12,23 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
+    position: relative;
     text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+#enter {
+    background-color: lavender;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

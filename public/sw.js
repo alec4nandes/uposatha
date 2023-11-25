@@ -1,4 +1,4 @@
-const cacheName = "cache22"; // Change value to force update
+const cacheName = "cache58"; // Change value to force update
 
 // PWA
 
@@ -100,7 +100,7 @@ function showLocalNotification(title, body, swRegistration) {
 // BOTH PWA & PUSH NOTIFICATIONS
 
 self.addEventListener("activate", async (event) => {
-    await cleanCache();
+    event.waitUntil(cleanCache);
     await handleActivatePushManager();
 });
 
