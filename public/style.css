@@ -16,19 +16,60 @@ body {
     text-align: center;
 }
 
-h1 {
+h1,
+h2,
+p {
     margin: 0;
 }
 
+hr {
+    height: 2.5px;
+    max-width: 400px;
+    width: 100%;
+    background-color: lightblue;
+    border: 0;
+}
+
+main {
+    & > *:not(hr) {
+        max-width: 750px;
+    }
+
+    & h1,
+    & h2 {
+        color: lightblue;
+    }
+}
+
+.vertical-flex {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+
+    & .container {
+        min-height: 100%;
+        min-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+        padding: 50px 15px;
+    }
+}
+
 #welcome {
-    background-color: lavender;
+    background-color: lightblue;
     color: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 10;
+
+    & > * {
+        max-width: 600px;
+    }
 }
