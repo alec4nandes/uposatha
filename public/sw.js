@@ -1,4 +1,4 @@
-const cacheName = "cache65"; // Change value to force update
+const cacheName = "cache66"; // Change value to force update
 
 // PWA
 
