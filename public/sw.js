@@ -1,4 +1,4 @@
-const cacheName = "cache58"; // Change value to force update
+const cacheName = "cache65"; // Change value to force update
 
 // PWA
 
@@ -59,19 +59,20 @@ function cacheFiles(event) {
 // If there's a cached version available, use it, but fetch an update for next time.
 // Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", (event) => {
-    event.respondWith(
-        caches.open(cacheName).then((cache) => {
-            return cache.match(event.request).then((response) => {
-                return (
-                    response ||
-                    fetch(event.request).then((networkResponse) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    })
-                );
-            });
-        })
-    );
+    event.request.method.toUpperCase() !== "POST" &&
+        event.respondWith(
+            caches.open(cacheName).then((cache) => {
+                return cache.match(event.request).then((response) => {
+                    return (
+                        response ||
+                        fetch(event.request).then((networkResponse) => {
+                            cache.put(event.request, networkResponse.clone());
+                            return networkResponse;
+                        })
+                    );
+                });
+            })
+        );
 });
 
 // PUSH NOTIFICATIONS

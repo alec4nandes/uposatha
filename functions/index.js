@@ -31,10 +31,8 @@ async function saveToDatabase(subscription) {
 
 // push notification endpoint
 
-api.get("/push", (req, res) => {
-    // TODO: make this req.subscription
-    // (only push to certain users based on their settings)
-    const subscription = dummyDb.subscription,
+api.post("/push", (req, res) => {
+    const { subscription } = req.body,
         sunrise = `6am`,
         sunset = "6pm",
         goals = ["fasting", "no smoking"],

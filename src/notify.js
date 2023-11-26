@@ -1,7 +1,24 @@
+import { db } from "./database.js";
+import { doc, updateDoc } from "firebase/firestore";
+
 async function getNotifications(user) {
+    if (window.Notification.permission === "denied") {
+        alert(
+            "You have previously blocked notifications for this site. Please allow notifications."
+        );
+    }
     check();
-    const permission = await requestNotificationPermission();
-    const swRegistration = await registerServiceWorker();
+    const granted = window.Notification.permission === "granted",
+        permission = !granted && (await requestNotificationPermission()),
+        swRegistration = await registerServiceWorker();
+    let subscription;
+    while (!subscription) {
+        subscription = await swRegistration.pushManager.getSubscription();
+    }
+    // TODO: push new subscriptions to array: one user, different devices
+    updateDoc(doc(db, "users", user.email), {
+        subscription: JSON.parse(JSON.stringify(subscription)),
+    });
 }
 
 function check() {
@@ -22,7 +39,6 @@ async function requestNotificationPermission() {
     if (permission !== "granted") {
         throw new Error("Permission not granted for window.Notification");
     }
-    toggleNotifyButton();
     return permission;
 }
 
