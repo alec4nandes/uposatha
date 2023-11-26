@@ -132,7 +132,7 @@ async function handleActivatePushManager() {
     }
 }
 
-const IS_DEVELOPMENT = true;
+const IS_DEVELOPMENT = false;
 
 async function contactServer(subscription) {
     const SERVER_URL = IS_DEVELOPMENT
